@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
+const booksRouter = require("./resources/books/router");
 const db = require("./utils/database");
 const Book = require("./resources/books/model");
 const Pet = require("./resources/pets/model");
