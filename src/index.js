@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
 const booksRouter = require("./resources/books/router");
+const petsRouter = require("./resources/pets/router");
+
 const db = require("./utils/database");
 const Book = require("./resources/books/model");
 const Pet = require("./resources/pets/model");
@@ -18,6 +20,9 @@ console.log(process.env.PGURL);
 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
+
+app.use("/books", booksRouter);
+app.use("/pets", petsRouter);
 
 /* SETUP ROUTES */
 
