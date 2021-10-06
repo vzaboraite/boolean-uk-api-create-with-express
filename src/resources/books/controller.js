@@ -9,7 +9,7 @@ function createOne(req, res) {
     ...req.body,
   };
 
-  const createOne = `
+  const createOneSQL = `
     INSERT INTO books (title, type, author, topic, publicationdate)
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *
@@ -17,7 +17,7 @@ function createOne(req, res) {
 
   const { title, type, author, topic, publicationdate } = bookToCreate;
 
-  db.query(createOne, [title, type, author, topic, publicationdate])
+  db.query(createOneSQL, [title, type, author, topic, publicationdate])
     .then((result) => res.json({ data: result.rows[0] }))
     .catch(console.error);
 }
