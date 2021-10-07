@@ -10,14 +10,14 @@ function createOne(req, res) {
   };
 
   const createOneSQL = `
-    INSERT INTO books (title, type, author, topic, publicationdate)
+    INSERT INTO books (title, type, author, topic, publicationDate)
     VALUES ($1, $2, $3, $4, $5)
     RETURNING *
   `;
 
-  const { title, type, author, topic, publicationdate } = bookToCreate;
+  const { title, type, author, topic, publicationDate } = bookToCreate;
 
-  db.query(createOneSQL, [title, type, author, topic, publicationdate])
+  db.query(createOneSQL, [title, type, author, topic, publicationDate])
     .then((result) => res.json({ data: result.rows[0] }))
     .catch(console.error);
 }
