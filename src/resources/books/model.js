@@ -2,10 +2,20 @@ const db = require("../../utils/database");
 const { buildBooksDatabase } = require("../../utils/mockData");
 
 function Book() {
-  function createTable() {
+  function checkTable() {
     const sql = `
-      DROP TABLE IF EXISTS books;
-      
+      SELECT * FROM information_schema.tables
+      WHERE table_schema = 'public'
+      AND table_name = 'books';
+    `;
+
+    return db.query(sql).then((result) => {
+      if (result.rowCount > 0) return true;
+    });
+  }
+
+  function createTable() {
+    const sql = `      
       CREATE TABLE IF NOT EXISTS books (
         id              SERIAL        PRIMARY KEY,
         title           VARCHAR(255)   NOT NULL,
@@ -37,10 +47,18 @@ function Book() {
     });
   }
 
-  createTable().then(() => {
-    console.log("\nStarting to create mock data for Books...\n");
+  checkTable().then((tableExists) => {
+    if (tableExists) {
+      console.log("[DB] Book table ready.\n");
 
-    mockData();
+      return;
+    }
+
+    createTable().then(() => {
+      console.log("\nMocking data for Books...\n");
+
+      mockData();
+    });
   });
 }
 

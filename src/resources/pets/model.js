@@ -2,10 +2,20 @@ const db = require("../../utils/database");
 const { buildAnimalDatabase } = require("../../utils/mockData");
 
 function Pet() {
+  function checkTable() {
+    const sql = `
+      SELECT * FROM information_schema.tables
+      WHERE table_schema = 'public'
+      AND table_name = 'pets';
+    `;
+
+    return db.query(sql).then((result) => {
+      if (result.rowCount > 0) return true;
+    });
+  }
+
   function createTable() {
     const sql = `
-      DROP TABLE IF EXISTS pets;
-
       CREATE TABLE IF NOT EXISTS pets (
         id        SERIAL        PRIMARY KEY,
         name      VARCHAR(255)   NOT NULL,
@@ -37,10 +47,18 @@ function Pet() {
     });
   }
 
-  createTable().then(() => {
-    console.log("\nStarting to create mock data for Pets...\n");
+  checkTable().then((tableExists) => {
+    if (tableExists) {
+      console.log("[DB] Pets table ready.\n");
 
-    mockData();
+      return;
+    }
+
+    createTable().then(() => {
+      console.log("\nMocking data for Pets...\n");
+
+      mockData();
+    });
   });
 }
 
